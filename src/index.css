@@ -3,3 +3,19 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.rc-pagination-item:hover {
+  border-color: #ee6e73 !important;
+}
+.rc-pagination-item {
+  color: #000;
+}
+
+.rc-pagination-item:hover a {
+  color: #000 !important;
+}
+
+.rc-pagination-item-active {
+  background-color: #ee6e73 !important;
+  border-color: #ee6e73 !important;
+  color: white !important;
+}

@@ -1,0 +1,110 @@
+.filter-options {
+    padding: 10px;
+    background-color: #eeefef;
+    display: flex;
+    align-items: center;
+    height: 46px;
+    justify-content: space-between;
+}
+
+.search-wrapper {
+    box-shadow: 0px 15px 10px -15px #111;
+}
+
+.filter-brand-wrapper {
+    min-width: 120px;
+}
+
+.search-input {
+    padding: 0px 10px;
+    position: relative;
+}
+
+.search-input::before {
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAQJJREFUKBWVkr2uQUEUhf3ET6GRaC5aFRoJKrf1BKpb8SwqovYGXkCj00k0QnRKEYkILYobvpUYmeMMyVnJl7P3mjN7Zu9zwiGv2qRFyMMSRrAFp6JPN8XzBj+wgDkUYAg7WINTYdwpDECxrRLJHeq2accdkgm8bzTvNAg2EDOGeUYI1KNO1gkuzTA1g8T7ojbn4ONQWPuHPWgeHmnzCqoe15tkSNPgPEAn68oVcOmA2XMtGK9FoE/VhOTTVNExqLCGZnxCv2pYauEC6lF0oQxX6IOvb7yX9NPEQafan+aPXDdQC18LsO6Tip5BBY6gIQaSbnMCFRCBZRcIvFkbsvCr4AFGOCxQy+JdGQAAAABJRU5ErkJggg==');
+    display: block;
+    position: absolute;
+    width: 15px;
+    z-index: 3;
+    height: 15px;
+    font-size: 20px;
+    top: 1px;
+    left: 16px;
+    line-height: 32px;
+    opacity: 0.6;
+}
+
+.search-input > input {
+    width: 100%;
+    font-size: 18px;
+    border: none;
+    line-height: 22px;
+    padding: 5px 10px 5px 25px;
+    height: 32px;
+    position: relative;
+}
+
+.search-input > input:focus {
+    outline: none;
+}
+
+.filter-button {
+    max-height: 36px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+@media screen and (max-width: 500px) {
+    .filter-options {
+        flex-flow: column;
+        height: auto;
+    }
+
+    .search-wrapper {
+        width: 100%;
+        margin-bottom: 7px;
+    }
+
+    .filter-brand-wrapper {
+        padding-bottom: 5px;
+        width: 100%;
+    }
+
+    .filter-price-wrapper {
+        width: 100%;
+        padding-bottom: 5px;
+    }
+
+    .filter-price-input:first-child {
+        margin-right: 0px;
+        margin-bottom: 5px;
+    }
+}
+
+.filter-price-wrapper {
+
+}
+
+.filter-price-input {
+    border: none;
+    border-bottom: 1px solid black;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    padding: 3px;
+}
+
+.filter-price-input:first-child {
+    margin-right: 5px;
+}
+
+.filter-price-input:focus {
+    border-bottom: 1px solid #ee6e73;
+}

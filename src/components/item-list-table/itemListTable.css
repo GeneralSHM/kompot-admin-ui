@@ -1,0 +1,167 @@
+.table {
+    display: table;
+    width: 100%;
+}
+
+.row {
+    display: table-row;
+}
+
+.table-cell, .table-head {
+    vertical-align: middle;
+    display: table-cell;
+    padding: 3px 10px;
+}
+
+.table-head {
+    border: 1px solid #999999;
+}
+
+.table-head:nth-child(1) {
+    border-left: none;
+}
+
+.table-head:last-child {
+    border-right: none;
+}
+
+.table-head:nth-child(1n + 1) {
+    border-left: none;
+}
+
+.row:nth-child(2n) {
+    background-color: #f2f2f2;
+}
+
+.test-wrap {
+    max-width: 150px;
+}
+
+.select-brand {
+    min-width: 100px;
+}
+
+.green-text {
+    color: #008000;
+}
+
+.red-text {
+    color: #ff0000;
+}
+
+
+@media screen and (max-width: 500px) {
+    .table {
+        display: block;
+        text-align: left;
+    }
+
+    .row {
+        display: flex;
+        flex-flow: column;
+        border: 1px solid #999999;
+        margin-bottom: 5px;
+    }
+
+    .table-cell {
+        display: block;
+        border: none;
+        padding-top: 6px;
+    }
+
+    .row:first-child {
+        display: none;
+    }
+}
+
+.action-icon {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+
+/**
+Update product css
+ */
+.form-style-6{
+    font: 95% Arial, Helvetica, sans-serif;
+    max-width: 400px;
+    margin: 10px auto;
+    padding: 16px;
+    background: #F7F7F7;
+}
+.form-style-6 h1{
+    background: #ee6e73;
+    padding: 20px 0;
+    font-size: 140%;
+    font-weight: 300;
+    text-align: center;
+    color: #fff;
+    margin: -16px -16px 16px -16px;
+}
+.form-style-6 input[type="text"],
+.form-style-6 input[type="date"],
+.form-style-6 input[type="datetime"],
+.form-style-6 input[type="email"],
+.form-style-6 input[type="number"],
+.form-style-6 input[type="search"],
+.form-style-6 input[type="time"],
+.form-style-6 input[type="url"],
+.form-style-6 textarea,
+.form-style-6 select
+{
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    margin-bottom: 4%;
+    border: 1px solid #ccc;
+    padding: 3%;
+    color: #555;
+    font: 95% Arial, Helvetica, sans-serif;
+}
+.form-style-6 input[type="text"]:focus,
+.form-style-6 input[type="date"]:focus,
+.form-style-6 input[type="datetime"]:focus,
+.form-style-6 input[type="email"]:focus,
+.form-style-6 input[type="number"]:focus,
+.form-style-6 input[type="search"]:focus,
+.form-style-6 input[type="time"]:focus,
+.form-style-6 input[type="url"]:focus,
+.form-style-6 textarea:focus,
+.form-style-6 select:focus
+{
+    box-shadow: 0 0 5px #ee6e73;
+    padding: 3%;
+    border: 1px solid #ee6e73;
+}
+
+.form-style-6 input[type="submit"],
+.form-style-6 input[type="button"]{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    padding: 3%;
+    background: #ee6e73;
+    border-bottom: 2px solid ee6e73;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+    color: #fff;
+}
+.form-style-6 input[type="submit"]:hover,
+.form-style-6 input[type="button"]:hover{
+    background: #ee6e73;
+}
+
+/**
+End update product
+ */

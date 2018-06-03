@@ -1,0 +1,9 @@
+.item-table-header {
+    display: table-row;
+}
+
+.rTableCell {
+    display: table-cell;
+    padding: 10px;
+    border: 1px solid #999999;
+}
