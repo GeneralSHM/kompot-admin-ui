@@ -71,7 +71,7 @@ const Price = (props) => {
 
 const Availability = (props) => {
   const { availability } = props;
-  const inStock = availability === 'in_stock';
+  const inStock = availability === 'Active';
   const className = inStock ? 'green-text' : 'red-text';
   const text = inStock ? 'Available': 'Not available';
 
@@ -191,12 +191,12 @@ class StoreSelect extends Component{
   }
 
   render() {
-    return(<Select
-      name="form-brand-select"
+    return(<div className="select-store"><Select
+      name="form-store-select"
       value={this.state.selectedOption}
       onChange={this.handleStoreSelect}
       options={this.state.stores}
-    />);
+    /></div>);
   }
 };
 

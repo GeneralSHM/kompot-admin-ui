@@ -41,6 +41,10 @@
     min-width: 100px;
 }
 
+.select-store {
+    min-width: 130px;
+}
+
 .green-text {
     color: #008000;
 }
