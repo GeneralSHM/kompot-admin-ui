@@ -70,6 +70,10 @@ class App extends Component {
     });
   }
 
+  updateProduct(product) {
+    API.put(`product/${product.id}`, { product }, res => {});
+  }
+
   onPaginationChange(current, pageSize){
     this.getProducts(current, pageSize);
     this.setState({
@@ -97,7 +101,11 @@ class App extends Component {
               key={this.state.refreshView}
               total={this.state.totalProducts}
             />
-            <ItemListTable key={this.state.refreshView + 1} brands={this.state.brands} products={products}/>
+            <ItemListTable key={this.state.refreshView + 1}
+                           brands={this.state.brands}
+                           products={products}
+                           updateProductToAPI={this.updateProduct}
+            />
             <Pagination
               current={this.state.currentPage}
               onChange={this.onPaginationChange}

@@ -31,10 +31,12 @@ class SelectBrand extends Component {
 
     this.state = {
       selectedOption: props.brand || '',
+      product: props.product
     };
 
     this.handleBrandChange = props.handleBrandChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.updateProductToAPIFunction = props.updateProductToAPIFunction;
   }
 
   handleChange(brand) {
@@ -44,6 +46,9 @@ class SelectBrand extends Component {
     this.setState({
       selectedOption: brand.value
     });
+    const product = this.state.product;
+    product.brandId = brand.value;
+    this.updateProductToAPIFunction(product);
     this.handleBrandChange(brand);
   }
 
@@ -110,7 +115,7 @@ class ActionsBar extends Component{
 
   onPriceChange(event) {
     let product = this.state.product;
-    product.price = event.target.value;
+    product.our_price = event.target.value;
     this.setState({
       product: product
     });
@@ -145,7 +150,7 @@ class ActionsBar extends Component{
           onClose={this.onCloseModal}
           showCloseIcon={false}
           center>
-          <div class="form-style-6">
+          <div className="form-style-6">
             <h1>Update product</h1>
             <form>
               <input type="text" name="field1" value={this.state.product.sku} onChange={this.onSkuChange} placeholder="Amazon sku" />
@@ -159,7 +164,7 @@ class ActionsBar extends Component{
           onClose={this.onCloseModalDelete}
           showCloseIcon={false}
           center>
-          <div class="form-style-6">
+          <div className="form-style-6">
             <h1 style={{padding: "10px"}}>Are you sure you want to delete this product</h1>
             <form>
               <input type="button" value="Delete" />
@@ -238,7 +243,8 @@ class ItemListTable extends Component {
 
     this.state = {
       brands: props.brands,
-      products: props.products
+      products: props.products,
+      updateProductToAPIFunction: props.updateProductToAPI
     };
   };
 
@@ -277,11 +283,11 @@ class ItemListTable extends Component {
       rowData.push(<Cell key={(x + 2)} data={<Price price={products[x].our_price}/>}/>);
       rowData.push(<Cell key={(x + 3)} data={<Availability availability={products[x].availability}/>}/>);
       rowData.push(<Cell key={(x + 4)} data={<StoreSelect stores={products[x].stores}/>}/>);
-      rowData.push(<Cell key={(x + 5)} data={<SelectBrand handleBrandChange={this.onChangeBrand} brand={products[x].brand} brands={this.state.brands}/>}/>);
+      rowData.push(<Cell key={(x + 5)} data={<SelectBrand handleBrandChange={this.onChangeBrand} updateProductToAPIFunction={this.state.updateProductToAPIFunction} brand={products[x].brandId} product={products[x]} brands={this.state.brands}/>}/>);
       rowData.push(<Cell key={(x + 6)} data={<SimpleText name={products[x].last_change}/>}/>);
       rowData.push(<Cell key={(x + 7)} data={<SimpleText name={products[x].product_id}/>}/>);
       rowData.push(<Cell key={(x + 8)} data={<ApiCheckbox productId={1} sendToAmazon={products[x].send_to_amazon}/>}/>);
-      rowData.push(<Cell key={(x + 9)} data={<ActionsBar product={products[x]} />}/>); //TODO pass updateProduct
+      rowData.push(<Cell key={(x + 9)} data={<ActionsBar updateProductToAPIFunction={this.state.updateProductToAPIFunction} product={products[x]} />}/>);
 
       let row = <Row key={x} cells={rowData}/>;
       rows.push(row);
