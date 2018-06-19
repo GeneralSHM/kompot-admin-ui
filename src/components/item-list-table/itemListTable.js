@@ -74,6 +74,14 @@ const Price = (props) => {
   return (<span>{props.price}</span>);
 };
 
+const OurPrice = (props) => {
+  let style = {};
+  if (props.otherPrice != props.price) {
+    style.color = 'red';
+  }
+  return (<span style={style}>{props.price}</span>);
+};
+
 const Availability = (props) => {
   const { availability } = props;
   const inStock = availability === 'Active';
@@ -283,7 +291,7 @@ class ItemListTable extends Component {
       let rowData = [];
       rowData.push(<Cell key={x} data={<ProductName name={products[x].name}/>}/>);
       rowData.push(<Cell key={(x + 1)} data={<Price price={products[x].price}/>}/>);
-      rowData.push(<Cell key={(x + 2)} data={<Price price={products[x].our_price}/>}/>);
+      rowData.push(<Cell key={(x + 2)} data={<OurPrice otherPrice={products[x].price} price={products[x].our_price}/>}/>);
       rowData.push(<Cell key={(x + 3)} data={<Availability availability={products[x].availability}/>}/>);
       rowData.push(<Cell key={(x + 4)} data={<StoreSelect stores={products[x].stores}/>}/>);
       rowData.push(<Cell key={(x + 5)} data={<SelectBrand handleBrandChange={this.onChangeBrand} updateProductToAPIFunction={this.state.updateProductToAPIFunction} brand={products[x].brandId} product={products[x]} brands={this.state.brands}/>}/>);
