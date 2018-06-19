@@ -101,10 +101,11 @@ class App extends Component {
               key={this.state.refreshView}
               total={this.state.totalProducts}
             />
-            <ItemListTable key={this.state.refreshView + 1}
-                           brands={this.state.brands}
-                           products={products}
-                           updateProductToAPI={this.updateProduct}
+            <ItemListTable
+              key={this.state.refreshView + 1}
+              brands={this.state.brands}
+              products={products}
+              updateProductToAPI={this.updateProduct}
             />
             <Pagination
               current={this.state.currentPage}
@@ -118,7 +119,6 @@ class App extends Component {
               key={this.state.refreshView + 2}
               total={this.state.totalProducts}
             />
-
           </div>}
         </div>);
   }

@@ -263,8 +263,8 @@ class ItemListTable extends Component {
     this.setState({
       brandSelected: brand.value
     });
-    console.log(brand.value);
   }
+
 
   render() {
     const headerCellsNames = [
