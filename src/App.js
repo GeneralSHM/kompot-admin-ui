@@ -23,10 +23,12 @@ class App extends Component {
       API.get(`brands`)
     ]).then((response) => {
       const refreshView = this.state.refreshView;
+      const pageSize = this.state.pageSize;
       this.setState({
-        products: response[0].data.data,
+        products: response[0].data.data.items,
         brands: response[1].data.data,
-        refreshView: !refreshView
+        refreshView: !refreshView,
+        totalProducts: response[0].data.data.pagination.totalCount
       });
     });
 
@@ -34,6 +36,7 @@ class App extends Component {
       pageSize: 20,
       products: [],
       brands: [],
+      totalPages: 1,
       stores: [
         {value: 'https://www.google.com', label: 'google'},
         {value: 'https://www.github.com', label: 'githib'}
@@ -47,33 +50,36 @@ class App extends Component {
   }
 
   onShowSizeChange(current, pageSize) {
-    const refreshView = this.state.refreshView;
+    this.getProducts(1, pageSize);
     this.setState({
       pageSize,
       currentPage: 1,
-      refreshView: !refreshView
+    });
+  }
+
+  getProducts(currentPage, pageSize) {
+    const limit = pageSize;
+    const offset = (currentPage - 1) * pageSize;
+    const refreshView = this.state.refreshView;
+    API.get(`products?limit=${limit}&offset=${offset}`).then(res => {
+      this.setState({
+        products: res.data.data.items,
+        refreshView: !refreshView,
+        totalProducts: res.data.data.pagination.totalCount
+      });
     });
   }
 
   onPaginationChange(current, pageSize){
-    const refreshView = this.state.refreshView;
-    const limit = this.state.pageSize;
-    const offset = (current - 1) * this.state.pageSize;
-    API.get(`products?limit=${limit}&offset=${offset}`).then(res => {
-      this.setState({
-        products: res.data.data
-      });
-    });
+    this.getProducts(current, pageSize);
     this.setState({
       currentPage: current,
-      refreshView: !refreshView
     });
   }
 
   render() {
     const { products, pageSize, currentPage } = this.state;
 
-    const productsForView = products;
     return (
         <div className="App">
           <Header/>
@@ -89,9 +95,9 @@ class App extends Component {
               onShowSizeChange={this.onShowSizeChange}
               defaultCurrent={1}
               key={this.state.refreshView}
-              total={this.state.products.length}
+              total={this.state.totalProducts}
             />
-            <ItemListTable key={this.state.refreshView + 1} brands={this.state.brands} products={productsForView}/>
+            <ItemListTable key={this.state.refreshView + 1} brands={this.state.brands} products={products}/>
             <Pagination
               current={this.state.currentPage}
               onChange={this.onPaginationChange}
@@ -102,7 +108,7 @@ class App extends Component {
               onShowSizeChange={this.onShowSizeChange}
               defaultCurrent={1}
               key={this.state.refreshView + 2}
-              total={this.state.products.length}
+              total={this.state.totalProducts}
             />
 
           </div>}
