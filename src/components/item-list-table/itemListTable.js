@@ -98,11 +98,14 @@ class ActionsBar extends Component{
     this.onCloseModal = this.onCloseModal.bind(this);
     this.onCloseModalDelete = this.onCloseModalDelete.bind(this);
     this.onSkuChange = this.onSkuChange.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
     this.onPriceChange = this.onPriceChange.bind(this);
+    this.updateProductToAPIFunction = props.updateProductToAPIFunction;
   }
 
   updateProduct() {
-
+    this.updateProductToAPIFunction(this.state.product);
+    this.onCloseModal();
   }
 
   onSkuChange(event) {
@@ -155,7 +158,7 @@ class ActionsBar extends Component{
             <form>
               <input type="text" name="field1" value={this.state.product.sku} onChange={this.onSkuChange} placeholder="Amazon sku" />
               <input type="text" name="field2" value={this.state.product.our_price} onChange={this.onPriceChange} placeholder="Amazon Price" />
-              <input type="button" value="Update" />
+              <input type="button" onClick={this.updateProduct} value="Update" />
             </form>
           </div>
         </Modal>
