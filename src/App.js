@@ -18,10 +18,14 @@ class App extends Component {
   constructor(props, context) {
     super(props, context);
 
-    API.get(`products?limit=20&offset=0`).then(res => {
+    Promise.all([
+      API.get(`products?limit=20&offset=0`),
+      API.get(`brands`)
+    ]).then((response) => {
       const refreshView = this.state.refreshView;
       this.setState({
-        products: res.data.data,
+        products: response[0].data.data,
+        brands: response[1].data.data,
         refreshView: !refreshView
       });
     });
@@ -29,11 +33,7 @@ class App extends Component {
     this.state = {
       pageSize: 20,
       products: [],
-      brands: [
-        {value: 1, label: 'Hands'},
-        {value: 2, label: 'Legs'},
-        {value: 3, label: 'This is hell`a long brand name.'}
-      ],
+      brands: [],
       stores: [
         {value: 'https://www.google.com', label: 'google'},
         {value: 'https://www.github.com', label: 'githib'}
@@ -77,7 +77,7 @@ class App extends Component {
     return (
         <div className="App">
           <Header/>
-          <ItemFilterWrapper brands={this.state.brands} stores={this.state.stores}/>
+          <ItemFilterWrapper key={this.state.refreshView + 1} brands={this.state.brands} stores={this.state.stores}/>
           {this.state.products && <div style={{padding: '10px'}}>
             <Pagination
               current={this.state.currentPage}
