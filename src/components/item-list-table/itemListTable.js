@@ -109,6 +109,8 @@ class ActionsBar extends Component{
     this.updateProduct = this.updateProduct.bind(this);
     this.onPriceChange = this.onPriceChange.bind(this);
     this.updateProductToAPIFunction = props.updateProductToAPIFunction;
+    this.onDeleteProduct = props.onDeleteProduct;
+    this.deleteProduct = this.deleteProduct.bind(this);
   }
 
   updateProduct() {
@@ -148,6 +150,12 @@ class ActionsBar extends Component{
     this.setState({ openModalForDelete: false });
   }
 
+  deleteProduct() {
+    this.setState({ openModalForDelete: false }, () => {
+      this.onDeleteProduct(this.state.product.id);
+    });
+  }
+
   render() {
     const icons = [
       <img key={1} onClick={this.onOpenModal} className="action-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHISURBVGhD7dlJSsRwFMThBuf5EHoDD6QIXsG1J3DlBRzbeZ7nCVeuvIhH0F8hLSE8w0tn8f6BFHzQ9Kpq0XmQbjVp0qR2GcMy3jCjL+qYCbzjO2MBtYo1onZjikZ01GLMPKzyebUYswirfF5yY3ow9fvxL94xs0giGrGCL0zri0w8Y54QHo1YRadUN2OWEBqNWEe+WJkxerqNIywasQmrnHjGaIQe1WHRiC1kS1mKxoSP6MUO8qX/Y42ZQ+iIPuzCKlzEGhOWfuzBKuqhMZMITdURojuj31ZYNOIAVjmvNYSPOIJVzmsD4SNOYJXzaiN8xBmscl7bCB0xgAtY5bx0Z0JHDOISVjkv3RkdzbBoxBWscl56ROtohmUIVUfsQ7+tsAzjGlY5r0OEj7iFVc7rGOEj7mGV8zpF+IhHWOW8zhE6YgTPsMp56c6Ej3iBVc5Ld0ZHMyyjqDpCj2jdm7Do1f4rrHJeekTr3oRFr1r034RVzusGekCERo9Iq5xXEiOUT1gFPe6QxAil2yEPSGaE0s0QvVROaoRSdoiOZXIjlDJDdGd0NJOMd4jujI5msvEM0Z3R0Uw6emv+UUDvrUL/n2jSpEnZtFo/7yot3NO64EMAAAAASUVORK5CYII=" />,
@@ -178,7 +186,7 @@ class ActionsBar extends Component{
           <div className="form-style-6">
             <h1 style={{padding: "10px"}}>Are you sure you want to delete this product</h1>
             <form>
-              <input type="button" value="Delete" />
+              <input type="button" onClick={this.deleteProduct} value="Delete" />
             </form>
           </div>
         </Modal>
@@ -258,10 +266,12 @@ class ItemListTable extends Component {
     super(props, context);
 
     this.state = {
+      refreshView: false,
       brands: props.brands,
       products: props.products,
       updateProductToAPIFunction: props.updateProductToAPI
     };
+    this.onDeleteProduct = props.onDeleteProduct;
   };
 
   onChangeBrand(brand) {
@@ -269,7 +279,6 @@ class ItemListTable extends Component {
       brandSelected: brand.value
     });
   }
-
 
   render() {
     const headerCellsNames = [
@@ -287,7 +296,12 @@ class ItemListTable extends Component {
 
     const headerCells = [];
     for (let key in headerCellsNames) {
-      headerCells.push(<TableHead key={key} name={headerCellsNames[key]}/>);
+      if (headerCellsNames[key] === 'API') {
+        let value = <span style={{display: 'flex', alignItems: 'center'}}><span style={{marginRight: '10px'}}>{headerCellsNames[key]}</span><ApiCheckbox product={[]} updateProductToAPIFunction={this.state.updateProductToAPIFunction} sendToAmazon={false}/></span>;
+        headerCells.push(<TableHead key={key} name={value}/>);
+      } else {
+        headerCells.push(<TableHead key={key} name={headerCellsNames[key]}/>);
+      }
     }
 
     const products = this.state.products;
@@ -303,7 +317,7 @@ class ItemListTable extends Component {
       rowData.push(<Cell key={(x + 6)} data={<SimpleText name={products[x].last_change}/>}/>);
       rowData.push(<Cell key={(x + 7)} data={<SimpleText name={products[x].product_id}/>}/>);
       rowData.push(<Cell key={(x + 8)} data={<ApiCheckbox product={products[x]} updateProductToAPIFunction={this.state.updateProductToAPIFunction} sendToAmazon={products[x].send_to_amazon}/>}/>);
-      rowData.push(<Cell key={(x + 9)} data={<ActionsBar updateProductToAPIFunction={this.state.updateProductToAPIFunction} product={products[x]} />}/>);
+      rowData.push(<Cell key={(x + 9)} data={<ActionsBar onDeleteProduct={this.onDeleteProduct} updateProductToAPIFunction={this.state.updateProductToAPIFunction} product={products[x]} />}/>);
 
       let row = <Row key={x} cells={rowData}/>;
       rows.push(row);

@@ -42,11 +42,13 @@ class App extends Component {
         {value: 'https://www.github.com', label: 'githib'}
       ],
       currentPage: 1,
-      refreshView: true
+      refreshView: 1
     };
 
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onPaginationChange = this.onPaginationChange.bind(this);
+    this.onDeleteProduct = this.onDeleteProduct.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
   }
 
   onShowSizeChange(current, pageSize) {
@@ -64,14 +66,22 @@ class App extends Component {
     API.get(`products?limit=${limit}&offset=${offset}`).then(res => {
       this.setState({
         products: res.data.data.items,
-        refreshView: !refreshView,
+        refreshView: refreshView + 1,
         totalProducts: res.data.data.pagination.totalCount
       });
     });
   }
 
   updateProduct(product) {
-    API.put(`product/${product.id}`, { product }, res => {});
+    API.put(`product/${product.id}`, { product }).then(res => {
+      this.getProducts(this.state.currentPage, this.state.pageSize);
+    });
+  }
+
+  deleteProduct(id) {
+    API.delete(`product/${id}`).then(res => {
+      this.getProducts(this.state.currentPage, this.state.pageSize);
+    });
   }
 
   onPaginationChange(current, pageSize){
@@ -79,6 +89,10 @@ class App extends Component {
     this.setState({
       currentPage: current,
     });
+  }
+
+  onDeleteProduct(id) {
+    this.deleteProduct(id);
   }
 
   render() {
@@ -102,10 +116,12 @@ class App extends Component {
               total={this.state.totalProducts}
             />
             <ItemListTable
-              key={this.state.refreshView + 1}
+              key={this.state.refreshView + 3}
               brands={this.state.brands}
               products={products}
               updateProductToAPI={this.updateProduct}
+              deleteProductToAPI={this.deleteProduct}
+              onDeleteProduct={this.onDeleteProduct}
             />
             <Pagination
               current={this.state.currentPage}
