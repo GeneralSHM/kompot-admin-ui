@@ -220,17 +220,22 @@ class ApiCheckbox extends Component {
   constructor(props, context) {
     super(props, context);
 
+    console.log(props.product.send_to_amazon);
     this.state = {
-      productId: props.productId,
-      checked: props.sendToAmazon
+      product: props.product,
+      checked: props.product.send_to_amazon
     };
 
+    this.updateProductToAPIFunction = props.updateProductToAPIFunction;
     this.handleBaconChange = this.handleBaconChange.bind(this);
   }
 
   handleBaconChange(event) {
-    const checked = event.target.value === true;
-
+    const checked = event.target.checked;
+    const sendToAmazon = checked ? 1 : 0;
+    const product = this.state.product;
+    product.send_to_amazon = sendToAmazon;
+    this.updateProductToAPIFunction(product);
     this.setState({
       checked: checked
     });
@@ -297,7 +302,7 @@ class ItemListTable extends Component {
       rowData.push(<Cell key={(x + 5)} data={<SelectBrand handleBrandChange={this.onChangeBrand} updateProductToAPIFunction={this.state.updateProductToAPIFunction} brand={products[x].brandId} product={products[x]} brands={this.state.brands}/>}/>);
       rowData.push(<Cell key={(x + 6)} data={<SimpleText name={products[x].last_change}/>}/>);
       rowData.push(<Cell key={(x + 7)} data={<SimpleText name={products[x].product_id}/>}/>);
-      rowData.push(<Cell key={(x + 8)} data={<ApiCheckbox productId={1} sendToAmazon={products[x].send_to_amazon}/>}/>);
+      rowData.push(<Cell key={(x + 8)} data={<ApiCheckbox product={products[x]} updateProductToAPIFunction={this.state.updateProductToAPIFunction} sendToAmazon={products[x].send_to_amazon}/>}/>);
       rowData.push(<Cell key={(x + 9)} data={<ActionsBar updateProductToAPIFunction={this.state.updateProductToAPIFunction} product={products[x]} />}/>);
 
       let row = <Row key={x} cells={rowData}/>;
