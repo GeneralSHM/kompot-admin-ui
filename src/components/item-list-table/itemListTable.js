@@ -247,8 +247,6 @@ class ApiCheckbox extends Component {
     this.setState({
       checked: checked
     });
-
-    //TODO send to API
   }
 
   render() {
@@ -272,6 +270,7 @@ class ItemListTable extends Component {
       updateProductToAPIFunction: props.updateProductToAPI
     };
     this.onDeleteProduct = props.onDeleteProduct;
+    this.setAllProductsSendToAmazon = props.setAllProductsSendToAmazon;
   };
 
   onChangeBrand(brand) {
@@ -294,18 +293,35 @@ class ItemListTable extends Component {
       'Actions'
     ];
 
+    const products = this.state.products;
+    let neededCount = products.length;
+    let count = 0;
+    let allProductsToApi = false;
+    products.map((product) => {
+      if (product.send_to_amazon === true) {
+        count++;
+      }
+    });
+    if (count === neededCount) {
+      allProductsToApi = true;
+    }
     const headerCells = [];
     for (let key in headerCellsNames) {
       if (headerCellsNames[key] === 'API') {
-        let value = <span style={{display: 'flex', alignItems: 'center'}}><span style={{marginRight: '10px'}}>{headerCellsNames[key]}</span><ApiCheckbox product={[]} updateProductToAPIFunction={this.state.updateProductToAPIFunction} sendToAmazon={false}/></span>;
+        let value = <span style={{display: 'flex', alignItems: 'center'}}>
+          <span style={{marginRight: '10px'}}>
+            {headerCellsNames[key]}
+          </span>
+          <ApiCheckbox product={{send_to_amazon: allProductsToApi}} updateProductToAPIFunction={this.setAllProductsSendToAmazon} sendToAmazon={allProductsToApi}/>
+        </span>;
         headerCells.push(<TableHead key={key} name={value}/>);
       } else {
         headerCells.push(<TableHead key={key} name={headerCellsNames[key]}/>);
       }
     }
 
-    const products = this.state.products;
     const rows = [];
+    rows.push(<Row key={-1} cells={headerCells}/>);
     for (let x = 0; x < products.length; x ++) {
       let rowData = [];
       rowData.push(<Cell key={x} data={<ProductName name={products[x].name}/>}/>);
@@ -326,7 +342,6 @@ class ItemListTable extends Component {
     return (
       <div>
         <div className="table">
-          <Row cells={headerCells}/>
           {rows}
         </div>
       </div>

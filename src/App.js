@@ -49,6 +49,7 @@ class App extends Component {
     this.onPaginationChange = this.onPaginationChange.bind(this);
     this.onDeleteProduct = this.onDeleteProduct.bind(this);
     this.updateProduct = this.updateProduct.bind(this);
+    this.setAllProductsSendToAmazon = this.setAllProductsSendToAmazon.bind(this);
   }
 
   onShowSizeChange(current, pageSize) {
@@ -88,11 +89,34 @@ class App extends Component {
     this.getProducts(current, pageSize);
     this.setState({
       currentPage: current,
+    }, () => {
+      const currentHash = window.location.hash;
+      const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+      if (currentHash.indexOf('page') !== -1) {
+        let regex = isThereMoreThanOneParam ? /page=.*?&/ : /page=.*/;
+        let newHash = currentHash.replace(regex, `page=${current}&`);
+        window.location.hash = newHash;
+      } else {
+        window.location.hash += isThereMoreThanOneParam ? `&page=${current}` : `page=${current}`;
+      }
     });
   }
 
   onDeleteProduct(id) {
     this.deleteProduct(id);
+  }
+
+  setAllProductsSendToAmazon(dummyProduct) {
+    const products = this.state.products;
+    let promises = [];
+    products.map((product) => {
+      product.send_to_amazon = dummyProduct.send_to_amazon;
+      promises.push(API.put(`product/${product.id}`, { product }));
+    });
+
+    Promise.all(promises).then(() => {
+      this.getProducts(this.state.currentPage, this.state.pageSize);
+    });
   }
 
   render() {
@@ -122,6 +146,7 @@ class App extends Component {
               updateProductToAPI={this.updateProduct}
               deleteProductToAPI={this.deleteProduct}
               onDeleteProduct={this.onDeleteProduct}
+              setAllProductsSendToAmazon={this.setAllProductsSendToAmazon}
             />
             <Pagination
               current={this.state.currentPage}
