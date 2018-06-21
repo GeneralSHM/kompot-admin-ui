@@ -20,7 +20,8 @@ class App extends Component {
 
     Promise.all([
       API.get(`products?limit=20&offset=0`),
-      API.get(`brands`)
+      API.get(`brands`),
+      API.get(`stores`)
     ]).then((response) => {
       const refreshView = this.state.refreshView;
       const pageSize = this.state.pageSize;
@@ -28,7 +29,8 @@ class App extends Component {
         products: response[0].data.data.items,
         brands: response[1].data.data,
         refreshView: !refreshView,
-        totalProducts: response[0].data.data.pagination.totalCount
+        totalProducts: response[0].data.data.pagination.totalCount,
+        stores: response[2].data.data
       });
     });
 
@@ -37,10 +39,6 @@ class App extends Component {
       products: [],
       brands: [],
       totalPages: 1,
-      stores: [
-        {value: 'https://www.google.com', label: 'google'},
-        {value: 'https://www.github.com', label: 'githib'}
-      ],
       currentPage: 1,
       refreshView: 1
     };
