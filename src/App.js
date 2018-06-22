@@ -57,6 +57,7 @@ class App extends Component {
 
     const searchTerm = paramsFromHash.filter(obj => obj.key === 'search');
     const selectedBrandOptions = paramsFromHash.filter(obj => obj.key === 'brands');
+    const selectedStoreOptions = paramsFromHash.filter(obj => obj.key === 'stores');
     this.state = {
       pageSize: pageSize,
       products: [],
@@ -64,6 +65,7 @@ class App extends Component {
       totalPages: 1,
       searchTerm: searchTerm.length === 1 ? searchTerm[0].value : '',
       selectedBrandOptions: selectedBrandOptions.length === 1 ? selectedBrandOptions[0].value : '',
+      selectedStoreOptions: selectedStoreOptions.length === 1 ? selectedStoreOptions[0].value : '',
       currentPage: currentPage,
       refreshView: 1
     };
@@ -218,6 +220,7 @@ class App extends Component {
             searchTerm={this.state.searchTerm}
             stores={this.state.stores}
             selectedBrandOptions={this.state.selectedBrandOptions}
+            selectedStoreOptions={this.state.selectedStoreOptions}
             updateProductFunction={this.getProducts}
             updateHashForPagination={this._setHashForPagination}
             changePagination={this.changePagination}/>

@@ -29,7 +29,7 @@ class ItemFilterWrapper extends Component {
       stores: props.stores,
       searchTerm: props.searchTerm,
       selectedBrandOptions: props.selectedBrandOptions,
-      selectedStoreOptions: ''
+      selectedStoreOptions: props.selectedStoreOptions
     };
 
     this.searchUpdated = this.searchUpdated.bind(this);
@@ -41,6 +41,23 @@ class ItemFilterWrapper extends Component {
   }
 
   handleStoreChange(value) {
+    this.updateHashForPagination(1, 20);
+    this.changePagination(1, 20);
+    let currentHash = window.location.hash;
+    let storesString = '';
+    value.map(storeObj => {
+      storesString += storesString === '' ? storeObj.value : ',' + storeObj.value;
+    });
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    if (currentHash.indexOf('stores') !== -1) {
+      let regex = isThereMoreThanOneParam ? /stores=.*?&/ : /stores=.*/;
+      let newHash = currentHash.replace(regex, `stores=${storesString}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&stores=${storesString}&` : `stores=${storesString}&`;
+    }
+
+    this.updateProductFunction();
     this.setState({
       selectedStoreOptions: value
     });
