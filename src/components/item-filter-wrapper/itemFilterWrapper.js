@@ -27,7 +27,7 @@ class ItemFilterWrapper extends Component {
     this.state = {
       brands: props.brands,
       stores: props.stores,
-      searchTerm: '',
+      searchTerm: props.searchTerm,
       selectedBrandOptions: '',
       selectedStoreOptions: ''
     };
@@ -35,6 +35,9 @@ class ItemFilterWrapper extends Component {
     this.searchUpdated = this.searchUpdated.bind(this);
     this.handleBrandChange = this.handleBrandChange.bind(this);
     this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.updateProductFunction = props.updateProductFunction;
+    this.updateHashForPagination = props.updateHashForPagination;
+    this.changePagination = props.changePagination;
   }
 
   handleStoreChange(value) {
@@ -49,15 +52,34 @@ class ItemFilterWrapper extends Component {
     });
   }
 
+  addHashForSearchTerm(searchTerm) {
+    this.updateHashForPagination(1, 20);
+    this.changePagination(1, 20);
+    searchTerm = encodeURIComponent(searchTerm);
+    let currentHash = window.location.hash;
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    if (currentHash.indexOf('search') !== -1) {
+      let regex = isThereMoreThanOneParam ? /search=.*?&/ : /search=.*/;
+      let newHash = currentHash.replace(regex, `search=${searchTerm}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&search=${searchTerm}&` : `search=${searchTerm}&`;
+    }
+
+    this.updateProductFunction();
+  }
+
   searchUpdated(term) {
-    this.setState({searchTerm: term})
+    this.setState({searchTerm: term}, () => {
+      this.addHashForSearchTerm(term);
+    })
   }
 
   render() {
     return (
       <div className="filter-options">
         <div className="search-wrapper">
-          <SearchInput className="search-input" onChange={this.searchUpdated} />
+          <SearchInput value={this.state.searchTerm} className="search-input" onChange={this.searchUpdated} />
         </div>
         <div className="filter-brand-wrapper">
           <Select

@@ -18,12 +18,14 @@ class App extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this._getProductsApiString = this._getProductsApiString.bind(this);
     let currentHash = window.location.hash;
 
     let pageSize = 20;
     let currentPage = 1;
+    let paramsFromHash = [];
     if (currentHash !== '') {
-      const paramsFromHash = this.getHashedPagination();
+      paramsFromHash = this.getHashedPagination();
       paramsFromHash.map((paramObj) => {
         if (paramObj.key === 'page') {
           currentPage = parseInt(paramObj.value);
@@ -31,17 +33,19 @@ class App extends Component {
           pageSize = parseInt(paramObj.value);
         }
       });
+    } else {
+      this._setHashForPagination(currentPage, pageSize);
     }
     const limit = pageSize;
     const offset = (currentPage - 1) * pageSize;
 
+    const productsApiString = this._getProductsApiString();
     Promise.all([
-      API.get(`products?limit=${limit}&offset=${offset}`),
+      API.get(productsApiString),
       API.get(`brands`),
       API.get(`stores`)
     ]).then((response) => {
       const refreshView = this.state.refreshView;
-      const pageSize = this.state.pageSize;
       this.setState({
         products: response[0].data.data.items,
         brands: response[1].data.data,
@@ -51,11 +55,13 @@ class App extends Component {
       });
     });
 
+    const searchTerm = paramsFromHash.filter(obj => obj.key === 'search');
     this.state = {
       pageSize: pageSize,
       products: [],
       brands: [],
       totalPages: 1,
+      searchTerm: searchTerm.length === 1 ? searchTerm[0].value : '',
       currentPage: currentPage,
       refreshView: 1
     };
@@ -66,6 +72,8 @@ class App extends Component {
     this.updateProduct = this.updateProduct.bind(this);
     this.setAllProductsSendToAmazon = this.setAllProductsSendToAmazon.bind(this);
     this.addHashForThePagination = this.addHashForThePagination.bind(this);
+    this.getProducts = this.getProducts.bind(this);
+    this.changePagination = this.changePagination.bind(this);
   }
 
   onShowSizeChange(current, pageSize) {
@@ -75,7 +83,7 @@ class App extends Component {
     }, this.addHashForThePagination(1, pageSize));
   }
 
-  getProducts() {
+  _getProductsApiString() {
     const queryParams = this.getHashedPagination();
     let apiString = `products?`;
     let currentPage = 0;
@@ -91,9 +99,15 @@ class App extends Component {
     });
     const limit = pageSize;
     const offset = (currentPage - 1) * pageSize;
+
+    return `${apiString}&limit=${limit}&offset=${offset}`;
+  }
+
+  getProducts() {
+    const apiString = this._getProductsApiString();
     const refreshView = this.state.refreshView;
 
-    API.get(`${apiString}&limit=${limit}&offset=${offset}`).then(res => {
+    API.get(apiString).then(res => {
       this.setState({
         products: res.data.data.items,
         refreshView: refreshView + 1,
@@ -114,7 +128,7 @@ class App extends Component {
     });
   }
 
-  addHashForThePagination(current, pageSize) {
+  _setHashForPagination(current, pageSize) {
     let currentHash = window.location.hash;
     const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
     if (currentHash.indexOf('page') !== -1) {
@@ -132,7 +146,10 @@ class App extends Component {
     } else {
       window.location.hash += isThereMoreThanOneParam ? `&pageSize=${pageSize}&` : `pageSize=${pageSize}&`;
     }
+  }
 
+  addHashForThePagination(current, pageSize) {
+    this._setHashForPagination(current, pageSize);
     this.getProducts();
   }
 
@@ -155,6 +172,13 @@ class App extends Component {
     });
 
     return params;
+  }
+
+  changePagination(current, pageSize) {
+    this.setState({
+      currentPage: current,
+      pageSize: pageSize
+    });
   }
 
   onPaginationChange(current, pageSize){
@@ -186,7 +210,15 @@ class App extends Component {
     return (
         <div className="App">
           <Header/>
-          <ItemFilterWrapper key={this.state.refreshView + 1} brands={this.state.brands} stores={this.state.stores}/>
+          {this.state.brands && this.state.stores &&
+          <ItemFilterWrapper
+            brands={this.state.brands}
+            searchTerm={this.state.searchTerm}
+            stores={this.state.stores}
+            updateProductFunction={this.getProducts}
+            updateHashForPagination={this._setHashForPagination}
+            changePagination={this.changePagination}/>
+          }
           {this.state.products && <div style={{padding: '10px'}}>
             <Pagination
               current={this.state.currentPage}
