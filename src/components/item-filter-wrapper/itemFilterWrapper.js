@@ -28,7 +28,7 @@ class ItemFilterWrapper extends Component {
       brands: props.brands,
       stores: props.stores,
       searchTerm: props.searchTerm,
-      selectedBrandOptions: '',
+      selectedBrandOptions: props.selectedBrandOptions,
       selectedStoreOptions: ''
     };
 
@@ -47,6 +47,23 @@ class ItemFilterWrapper extends Component {
   }
 
   handleBrandChange(value) {
+    this.updateHashForPagination(1, 20);
+    this.changePagination(1, 20);
+    let currentHash = window.location.hash;
+    let brandsString = '';
+    value.map(brandObj => {
+      brandsString += brandsString === '' ? brandObj.value : ',' + brandObj.value;
+    });
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    if (currentHash.indexOf('brands') !== -1) {
+      let regex = isThereMoreThanOneParam ? /brands=.*?&/ : /brands=.*/;
+      let newHash = currentHash.replace(regex, `brands=${brandsString}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&brands=${brandsString}&` : `brands=${brandsString}&`;
+    }
+
+    this.updateProductFunction();
     this.setState({
       selectedBrandOptions: value
     });
@@ -104,7 +121,6 @@ class ItemFilterWrapper extends Component {
           />
         </div>
         <FilterPrice/>
-        <button className="filter-button">Filter</button>
       </div>
     );
   }
