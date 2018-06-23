@@ -58,6 +58,8 @@ class App extends Component {
     const searchTerm = paramsFromHash.filter(obj => obj.key === 'search');
     const selectedBrandOptions = paramsFromHash.filter(obj => obj.key === 'brands');
     const selectedStoreOptions = paramsFromHash.filter(obj => obj.key === 'stores');
+    const priceFrom = paramsFromHash.filter(obj => obj.key === 'priceFrom');
+    const priceTo = paramsFromHash.filter(obj => obj.key === 'priceTo');
     this.state = {
       pageSize: pageSize,
       products: [],
@@ -67,6 +69,8 @@ class App extends Component {
       selectedBrandOptions: selectedBrandOptions.length === 1 ? selectedBrandOptions[0].value : '',
       selectedStoreOptions: selectedStoreOptions.length === 1 ? selectedStoreOptions[0].value : '',
       currentPage: currentPage,
+      priceFrom: priceFrom.length === 1 ? priceFrom[0].value : '',
+      priceTo: priceTo.length === 1 ? priceTo[0].value : '',
       refreshView: 1
     };
 
@@ -223,7 +227,9 @@ class App extends Component {
             selectedStoreOptions={this.state.selectedStoreOptions}
             updateProductFunction={this.getProducts}
             updateHashForPagination={this._setHashForPagination}
-            changePagination={this.changePagination}/>
+            changePagination={this.changePagination}
+            priceFrom={this.state.priceFrom}
+            priceTo={this.state.priceTo}/>
           }
           {this.state.products && <div style={{padding: '10px'}}>
             <Pagination

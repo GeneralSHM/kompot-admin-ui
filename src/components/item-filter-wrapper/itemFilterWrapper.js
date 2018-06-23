@@ -7,14 +7,40 @@ class FilterPrice extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {};
+    this.state = {
+      priceFrom: props.priceFrom,
+      priceTo: props.priceTo
+    };
+
+    this.onPriceToChangeHash = props.onPriceToChangeHash;
+    this.onPriceFromChangeHash = props.onPriceFromChangeHash;
+
+    this.onPriceFromChange = this.onPriceFromChange.bind(this);
+    this.onPriceToChange = this.onPriceToChange.bind(this);
+  }
+
+  onPriceFromChange(event) {
+    const value = event.target.value;
+    this.onPriceFromChangeHash(value);
+    this.setState({
+      priceFrom: value
+    });
+  }
+
+  onPriceToChange(event) {
+    debugger;
+    const value = event.target.value;
+    this.onPriceToChangeHash(value);
+    this.setState({
+      priceTo: value
+    });
   }
 
   render() {
     return(
       <div className="filter-price-wrapper">
-        <input type="text" className="filter-price-input" placeholder="From"/>
-        <input type="text" className="filter-price-input" placeholder="To"/>
+        <input type="text" onChange={this.onPriceFromChange} className="filter-price-input" value={this.state.priceFrom} placeholder="From"/>
+        <input type="text" onChange={this.onPriceToChange} className="filter-price-input" value={this.state.priceTo} placeholder="To"/>
       </div>
     );
   }
@@ -29,15 +55,59 @@ class ItemFilterWrapper extends Component {
       stores: props.stores,
       searchTerm: props.searchTerm,
       selectedBrandOptions: props.selectedBrandOptions,
-      selectedStoreOptions: props.selectedStoreOptions
+      selectedStoreOptions: props.selectedStoreOptions,
+      priceFrom: props.priceFrom ? props.priceFrom : '',
+      priceTo: props.priceTo ? props.priceTo : ''
     };
 
     this.searchUpdated = this.searchUpdated.bind(this);
     this.handleBrandChange = this.handleBrandChange.bind(this);
     this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.onPriceToChange = this.onPriceToChange.bind(this);
+    this.onPriceFromChange = this.onPriceFromChange.bind(this);
+
     this.updateProductFunction = props.updateProductFunction;
     this.updateHashForPagination = props.updateHashForPagination;
     this.changePagination = props.changePagination;
+  }
+
+  onPriceToChange(value) {
+    this.updateHashForPagination(1, 20);
+    this.changePagination(1, 20);
+    let currentHash = window.location.hash;
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    debugger;
+    if (currentHash.indexOf('priceTo') !== -1) {
+      let regex = isThereMoreThanOneParam ? /priceTo=.*?&/ : /priceTo=.*/;
+      let newHash = currentHash.replace(regex, `priceTo=${value}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&priceTo=${value}&` : `priceTo=${value}&`;
+    }
+
+    this.updateProductFunction();
+    this.setState({
+      priceTo: value
+    });
+  }
+
+  onPriceFromChange(value) {
+    this.updateHashForPagination(1, 20);
+    this.changePagination(1, 20);
+    let currentHash = window.location.hash;
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    if (currentHash.indexOf('priceFrom') !== -1) {
+      let regex = isThereMoreThanOneParam ? /priceFrom=.*?&/ : /priceFrom=.*/;
+      let newHash = currentHash.replace(regex, `priceFrom=${value}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&priceFrom=${value}&` : `priceFrom=${value}&`;
+    }
+
+    this.updateProductFunction();
+    this.setState({
+      priceFrom: value
+    });
   }
 
   handleStoreChange(value) {
@@ -137,7 +207,11 @@ class ItemFilterWrapper extends Component {
             placeholder="Stores..."
           />
         </div>
-        <FilterPrice/>
+        <FilterPrice
+          onPriceFromChangeHash={this.onPriceFromChange}
+          onPriceToChangeHash={this.onPriceToChange}
+          priceFrom={this.state.priceFrom}
+          priceTo={this.state.priceTo}/>
       </div>
     );
   }
