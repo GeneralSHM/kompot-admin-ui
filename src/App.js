@@ -136,6 +136,12 @@ class App extends Component {
     });
   }
 
+  createBrand(name) {
+    API.post(`brand`, { name }).then((res) => {
+      window.location.reload();
+    });
+  }
+
   _setHashForPagination(current, pageSize) {
     let currentHash = window.location.hash;
     const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
@@ -217,7 +223,8 @@ class App extends Component {
 
     return (
         <div className="App">
-          <Header/>
+          <Header
+            createBrandFunction={this.createBrand}/>
           {this.state.brands && this.state.stores &&
           <ItemFilterWrapper
             brands={this.state.brands}
