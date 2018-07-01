@@ -60,6 +60,7 @@ class App extends Component {
     const selectedStoreOptions = paramsFromHash.filter(obj => obj.key === 'stores');
     const priceFrom = paramsFromHash.filter(obj => obj.key === 'priceFrom');
     const priceTo = paramsFromHash.filter(obj => obj.key === 'priceTo');
+    const ourPrice = paramsFromHash.filter(obj => obj.key === 'ourPrice');
     this.state = {
       pageSize: pageSize,
       products: [],
@@ -71,7 +72,8 @@ class App extends Component {
       currentPage: currentPage,
       priceFrom: priceFrom.length === 1 ? priceFrom[0].value : '',
       priceTo: priceTo.length === 1 ? priceTo[0].value : '',
-      refreshView: 1
+      refreshView: 1,
+      ourPrice: ourPrice.length === 1 ? ourPrice[0].value !== '0' : false
     };
 
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -82,6 +84,7 @@ class App extends Component {
     this.addHashForThePagination = this.addHashForThePagination.bind(this);
     this.getProducts = this.getProducts.bind(this);
     this.changePagination = this.changePagination.bind(this);
+    this._setHashForOurPriceOrdering = this._setHashForOurPriceOrdering.bind(this);
   }
 
   onShowSizeChange(current, pageSize) {
@@ -160,6 +163,24 @@ class App extends Component {
     } else {
       window.location.hash += isThereMoreThanOneParam ? `&pageSize=${pageSize}&` : `pageSize=${pageSize}&`;
     }
+  }
+
+  _setHashForOurPriceOrdering(product) {
+    let value = product.send_to_amazon;
+    let booleanValue = value !== 0;
+    let currentHash = window.location.hash;
+    const isThereMoreThanOneParam = currentHash.indexOf('&') !== -1;
+    if (currentHash.indexOf('ourPrice') !== -1) {
+      let regex = isThereMoreThanOneParam ? /ourPrice=.*?&/ : /ourPrice=.*/;
+      let newHash = currentHash.replace(regex, `ourPrice=${value}&`);
+      window.location.hash = newHash;
+    } else {
+      window.location.hash += isThereMoreThanOneParam ? `&ourPrice=${value}&` : `ourPrice=${value}&`;
+    }
+
+    this.setState({
+      ourPrice: booleanValue,
+    }, this.getProducts());
   }
 
   addHashForThePagination(current, pageSize) {
@@ -253,12 +274,14 @@ class App extends Component {
             />
             <ItemListTable
               key={this.state.refreshView + 3}
+              ourPrice={this.state.ourPrice}
               brands={this.state.brands}
               products={products}
               updateProductToAPI={this.updateProduct}
               deleteProductToAPI={this.deleteProduct}
               onDeleteProduct={this.onDeleteProduct}
               setAllProductsSendToAmazon={this.setAllProductsSendToAmazon}
+              _setHashForOurPriceOrdering={this._setHashForOurPriceOrdering}
             />
             <Pagination
               current={this.state.currentPage}

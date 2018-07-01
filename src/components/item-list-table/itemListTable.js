@@ -172,7 +172,6 @@ class ActionsBar extends Component{
           <div className="form-style-6">
             <h1>Update product</h1>
             <form>
-              <input type="text" name="field1" value={this.state.product.sku} onChange={this.onSkuChange} placeholder="Amazon sku" />
               <input type="text" name="field2" value={this.state.product.our_price} onChange={this.onPriceChange} placeholder="Amazon Price" />
               <input type="button" onClick={this.updateProduct} value="Update" />
             </form>
@@ -272,12 +271,14 @@ class ItemListTable extends Component {
 
     this.state = {
       refreshView: false,
+      ourPrice: props.ourPrice,
       brands: props.brands,
       products: props.products,
       updateProductToAPIFunction: props.updateProductToAPI
     };
     this.onDeleteProduct = props.onDeleteProduct;
     this.setAllProductsSendToAmazon = props.setAllProductsSendToAmazon;
+    this._setHashForOurPriceOrdering = props._setHashForOurPriceOrdering;
   };
 
   onChangeBrand(brand) {
@@ -328,7 +329,7 @@ class ItemListTable extends Component {
           <span style={{marginRight: '10px'}}>
             {headerCellsNames[key]}
           </span>
-          <Sorting />
+          <ApiCheckbox product={{send_to_amazon: this.state.ourPrice}} updateProductToAPIFunction={this._setHashForOurPriceOrdering} sendToAmazon={this.state.ourPrice}/>
         </span>;
         headerCells.push(<TableHead key={key} name={value}/>);
       } else {
