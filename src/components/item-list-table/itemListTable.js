@@ -259,6 +259,13 @@ class ApiCheckbox extends Component {
 
 }
 
+const Sorting = (props) => {
+  return (<span>
+    <img style={{height: "30px"}} src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD8SURBVGhD7ZlBCsIwEEUD7jyDS7d6FO/hhbyHV/EK7t25E3Q+ZKCENGQWNpPhP3hQ2miTRZ8pJkIIIcQ55+zUHMRnFsdTshcf4jeLY5ybip14F3URKs7h2jTcxHIRKq5NwVWsLWApxrjmIn7E2uSXYgzGuuQkvsXaxGtiLD7jCs1sbcItXWW5zKxVF1ley6zV4VluZdbqsCz3ZNbq5lnuzazVTbN8FFGb15/Ed+MehJDBhHrYQ+RXCfGDqITYooAwm0YQYhuvhHixUkK86iq9WR6SWSs9WR6WWSutLA/NrJW1LLvIrJUyy64ya0Wz7DKzVkL80UMIISQyKf0AWdNsAKC3OjwAAAAASUVORK5CYII=' />
+      </span>
+      );
+};
+
 class ItemListTable extends Component {
   constructor(props, context) {
     super(props, context);
@@ -289,6 +296,7 @@ class ItemListTable extends Component {
       'Brand',
       'Last change',
       'Product ID',
+      'SKU',
       'API',
       'Actions'
     ];
@@ -315,6 +323,14 @@ class ItemListTable extends Component {
           <ApiCheckbox product={{send_to_amazon: allProductsToApi}} updateProductToAPIFunction={this.setAllProductsSendToAmazon} sendToAmazon={allProductsToApi}/>
         </span>;
         headerCells.push(<TableHead key={key} name={value}/>);
+      } else if (headerCellsNames[key] === 'Our Price') {
+        let value = <span style={{display: 'flex', alignItems: 'center'}}>
+          <span style={{marginRight: '10px'}}>
+            {headerCellsNames[key]}
+          </span>
+          <Sorting />
+        </span>;
+        headerCells.push(<TableHead key={key} name={value}/>);
       } else {
         headerCells.push(<TableHead key={key} name={headerCellsNames[key]}/>);
       }
@@ -332,6 +348,7 @@ class ItemListTable extends Component {
       rowData.push(<Cell key={(x + 5)} data={<SelectBrand handleBrandChange={this.onChangeBrand} updateProductToAPIFunction={this.state.updateProductToAPIFunction} brand={products[x].brandId} product={products[x]} brands={this.state.brands}/>}/>);
       rowData.push(<Cell key={(x + 6)} data={<SimpleText name={products[x].last_change}/>}/>);
       rowData.push(<Cell key={(x + 7)} data={<SimpleText name={products[x].product_id}/>}/>);
+      rowData.push(<Cell key={(x + 7)} data={<SimpleText name={products[x].ebay_item_id}/>}/>);
       rowData.push(<Cell key={(x + 8)} data={<ApiCheckbox product={products[x]} updateProductToAPIFunction={this.state.updateProductToAPIFunction} sendToAmazon={products[x].send_to_amazon}/>}/>);
       rowData.push(<Cell key={(x + 9)} data={<ActionsBar onDeleteProduct={this.onDeleteProduct} updateProductToAPIFunction={this.state.updateProductToAPIFunction} product={products[x]} />}/>);
 
