@@ -28,7 +28,6 @@ class FilterPrice extends Component {
   }
 
   onPriceToChange(event) {
-    debugger;
     const value = event.target.value;
     this.onPriceToChangeHash(value);
     this.setState({

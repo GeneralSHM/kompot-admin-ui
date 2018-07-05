@@ -32,3 +32,9 @@ html {
   position: relative !important;
   top: 0 !important;
 }
+
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

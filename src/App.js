@@ -239,6 +239,10 @@ class App extends Component {
     });
   }
 
+  sendPanic() {
+    API.get('/panic').then(res => {});
+  }
+
   render() {
     const { products, pageSize, currentPage } = this.state;
 
@@ -260,6 +264,7 @@ class App extends Component {
             priceTo={this.state.priceTo}/>
           }
           {this.state.products && <div style={{padding: '10px'}}>
+            <div className="pagination-wrapper">
             <Pagination
               current={this.state.currentPage}
               onChange={this.onPaginationChange}
@@ -272,6 +277,8 @@ class App extends Component {
               key={this.state.refreshView}
               total={this.state.totalProducts}
             />
+            <div><span>in case of panic: <button onClick={this.sendPanic}>Panic</button></span></div>
+            </div>
             <ItemListTable
               key={this.state.refreshView + 3}
               ourPrice={this.state.ourPrice}
