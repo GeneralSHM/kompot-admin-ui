@@ -67,7 +67,7 @@ const SimpleText = (props) => {
 };
 
 const ProductName = (props) => {
-  return (<div className="test-wrap" style={props.did_dowload_from_api !== 1 ? {} : { textDecoration: 'line-through'}}>{props.name}</div>);
+  return (<div className="test-wrap" style={props.isDowloaded !== 1 ? {} : { textDecoration: 'line-through'}}>{props.name}</div>);
 };
 
 const Price = (props) => {
