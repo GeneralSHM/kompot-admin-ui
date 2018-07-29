@@ -67,7 +67,7 @@ const SimpleText = (props) => {
 };
 
 const ProductName = (props) => {
-  return (<div className="test-wrap">{props.name}</div>);
+  return (<div className="test-wrap" style={props.did_dowload_from_api !== 1 ? {} : { textDecoration: 'line-through'}}>{props.name}</div>);
 };
 
 const Price = (props) => {
@@ -341,7 +341,7 @@ class ItemListTable extends Component {
     rows.push(<Row key={-1} cells={headerCells}/>);
     for (let x = 0; x < products.length; x ++) {
       let rowData = [];
-      rowData.push(<Cell key={x} data={<ProductName name={products[x].name}/>}/>);
+      rowData.push(<Cell key={x} data={<ProductName name={products[x].name} isDowloaded={products[x].did_download_from_api}/>}/>);
       rowData.push(<Cell key={(x + 1)} data={<Price price={products[x].price}/>}/>);
       rowData.push(<Cell key={(x + 2)} data={<OurPrice otherPrice={products[x].price} price={products[x].our_price}/>}/>);
       rowData.push(<Cell key={(x + 3)} data={<Availability availability={products[x].availability}/>}/>);
